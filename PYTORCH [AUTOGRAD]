@@ -1,0 +1,323 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "name": "Untitled0.ipynb",
+      "provenance": [],
+      "authorship_tag": "ABX9TyOxMUizgWvVvCUFPSoK2y7h",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Aman-Yadav-PY/Aman-Yadav/blob/master/PYTORCH%20%5BAUTOGRAD%5D\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "_ulPnt8siGvE"
+      },
+      "source": [
+        "import torch\n",
+        "import numpy"
+      ],
+      "execution_count": 1,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "cb4ov5STiKvP"
+      },
+      "source": [
+        "tensors = torch.tensor((4, 5))"
+      ],
+      "execution_count": 3,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "LhqPtIrgiODi",
+        "outputId": "394223c5-659d-44d8-b51b-7c35bd8db37d",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 126
+        }
+      },
+      "source": [
+        "r = torch.randn(5, 6) # tensor without tracking\n",
+        "print(r)\n",
+        "\n",
+        "# enabling tracking in r\n",
+        "r.requires_grad_(True)\n",
+        "print(r.requires_grad)"
+      ],
+      "execution_count": 21,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "tensor([[ 1.0746, -0.1203, -0.3582, -1.1729,  0.0106,  1.4407],\n",
+            "        [-1.5297,  0.6594, -0.5821, -0.5766, -0.4189,  0.5200],\n",
+            "        [-0.9737, -2.1843,  0.5535,  2.2886, -0.6736, -0.7354],\n",
+            "        [ 1.1588,  1.2137,  0.2692, -0.6705,  1.4708,  0.3035],\n",
+            "        [-2.0106, -0.6925, -1.5660,  0.5380,  1.7582, -1.6672]])\n",
+            "True\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "H4cbrCFnifEd",
+        "outputId": "efa787c2-7ffe-4877-fbd6-e79854c1420c",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 108
+        }
+      },
+      "source": [
+        "x = torch.randn(5, 3, requires_grad=True)\n",
+        "x"
+      ],
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "tensor([[-1.4535,  0.1285,  0.3383],\n",
+              "        [ 0.8659, -0.4159, -1.0732],\n",
+              "        [-0.9264, -0.5559, -1.2904],\n",
+              "        [-0.8430,  1.2056, -0.4387],\n",
+              "        [-0.9435,  0.9695,  0.3666]], requires_grad=True)"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 7
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "UNnWewVdi2JZ",
+        "outputId": "941f5b40-35ca-433d-8c26-2e237fc76a4f",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 35
+        }
+      },
+      "source": [
+        "type(x)"
+      ],
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "torch.Tensor"
+            ]
+          },
+          "metadata": {
+            "tags": []
+          },
+          "execution_count": 8
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "CiwS7Glai_Ti",
+        "outputId": "7af6d07f-a52e-4a56-e6f5-04242dba5b34",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 90
+        }
+      },
+      "source": [
+        "# operations on tensor under tracking condition\n",
+        "add = x+3\n",
+        "print(add.grad_fn)\n",
+        "sub = x-add\n",
+        "print(sub.grad_fn)\n",
+        "mult = x*3\n",
+        "print(mult.grad_fn)\n",
+        "div = x/mult\n",
+        "print(div.grad_fn)"
+      ],
+      "execution_count": 13,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "<AddBackward0 object at 0x7fa8798c3b00>\n",
+            "<SubBackward0 object at 0x7fa8798c3b00>\n",
+            "<MulBackward0 object at 0x7fa8798c3b00>\n",
+            "<DivBackward0 object at 0x7fa8798c3b00>\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "aX34ub2ejhhR",
+        "outputId": "e0b004e0-e379-4258-de9f-04b2156a362f",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 381
+        }
+      },
+      "source": [
+        "# reduction using differentiation\n",
+        "print(add.backward)\n",
+        "print(sub.backward)\n",
+        "print(mult.backward)\n",
+        "print(div.backward)"
+      ],
+      "execution_count": 16,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "<bound method Tensor.backward of tensor([[1.5465, 3.1285, 3.3383],\n",
+            "        [3.8659, 2.5841, 1.9268],\n",
+            "        [2.0736, 2.4441, 1.7096],\n",
+            "        [2.1570, 4.2056, 2.5613],\n",
+            "        [2.0565, 3.9695, 3.3666]], grad_fn=<AddBackward0>)>\n",
+            "<bound method Tensor.backward of tensor([[-3., -3., -3.],\n",
+            "        [-3., -3., -3.],\n",
+            "        [-3., -3., -3.],\n",
+            "        [-3., -3., -3.],\n",
+            "        [-3., -3., -3.]], grad_fn=<SubBackward0>)>\n",
+            "<bound method Tensor.backward of tensor([[-4.3604,  0.3854,  1.0149],\n",
+            "        [ 2.5978, -1.2478, -3.2197],\n",
+            "        [-2.7791, -1.6678, -3.8713],\n",
+            "        [-2.5291,  3.6169, -1.3160],\n",
+            "        [-2.8304,  2.9084,  1.0999]], grad_fn=<MulBackward0>)>\n",
+            "<bound method Tensor.backward of tensor([[0.3333, 0.3333, 0.3333],\n",
+            "        [0.3333, 0.3333, 0.3333],\n",
+            "        [0.3333, 0.3333, 0.3333],\n",
+            "        [0.3333, 0.3333, 0.3333],\n",
+            "        [0.3333, 0.3333, 0.3333]], grad_fn=<DivBackward0>)>\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "WRLDlUUlkmjD",
+        "outputId": "2fd14b16-f62a-43fb-e42d-f25127f2363f",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 90
+        }
+      },
+      "source": [
+        "means = x.mean()\n",
+        "print(means.grad_fn) # printing tracked function\n",
+        "print(means.requires_grad)\n",
+        "with torch.no_grad():\n",
+        "  resultant = means*3 # create new tensor with tracking under the codeblock\n",
+        "  print(resultant.grad_fn) # tracking function history\n",
+        "  print(resultant.requires_grad)"
+      ],
+      "execution_count": 24,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "<MeanBackward0 object at 0x7fa8798b1780>\n",
+            "True\n",
+            "None\n",
+            "False\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "9m_Yn1m1lL9E",
+        "outputId": "ba1ea058-e97a-4528-d70e-d4bf99ac6803",
+        "colab": {
+          "base_uri": "https://localhost:8080/",
+          "height": 235
+        }
+      },
+      "source": [
+        "# alteranative for tracking less tensor\n",
+        "print(x)\n",
+        "print(x.requires_grad)\n",
+        "\n",
+        "# creating new tracking less tensor\n",
+        "a = x.detach() # this METHOD will create new tensor'a' without tracking\n",
+        "print(a)\n",
+        "print(a.requires_grad)"
+      ],
+      "execution_count": 27,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "text": [
+            "tensor([[-1.4535,  0.1285,  0.3383],\n",
+            "        [ 0.8659, -0.4159, -1.0732],\n",
+            "        [-0.9264, -0.5559, -1.2904],\n",
+            "        [-0.8430,  1.2056, -0.4387],\n",
+            "        [-0.9435,  0.9695,  0.3666]], requires_grad=True)\n",
+            "True\n",
+            "tensor([[-1.4535,  0.1285,  0.3383],\n",
+            "        [ 0.8659, -0.4159, -1.0732],\n",
+            "        [-0.9264, -0.5559, -1.2904],\n",
+            "        [-0.8430,  1.2056, -0.4387],\n",
+            "        [-0.9435,  0.9695,  0.3666]])\n",
+            "False\n"
+          ],
+          "name": "stdout"
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "5rba2Fbmm6wd"
+      },
+      "source": [
+        "E"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "e6A3-johm9eq"
+      },
+      "source": [
+        "### END OF THE CODE DATED 03/10/20\n"
+      ]
+    }
+  ]
+}
